@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
 import { isEmail } from 'class-validator';
 import { HydratedDocument } from 'mongoose';
 import { hash } from 'argon2';
+import toJSON from './plugins/toJson.plugin';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -30,7 +31,13 @@ export class User {
   })
   email: string;
 
-  @Prop({ type: String, required: true, minlength: 5, maxlength: 20 })
+  @Prop({
+    type: String,
+    required: true,
+    minlength: 5,
+    maxlength: 20,
+    private: true,
+  })
   password: string;
 
   @Prop(
@@ -47,7 +54,7 @@ export class User {
   @Prop({ type: String, required: false, minlength: 20, maxlength: 250 })
   description: string;
 
-  @Prop({ type: Boolean, default: false })
+  @Prop({ type: Boolean, default: false, private: true })
   isEmailVerified: boolean;
 
   @Prop({
@@ -59,6 +66,7 @@ export class User {
 }
 
 const UserSchema = SchemaFactory.createForClass(User);
+UserSchema.plugin(toJSON);
 
 UserSchema.pre('save', async function (next) {
   if (this.isModified('password')) {

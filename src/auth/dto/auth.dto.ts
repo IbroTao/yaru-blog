@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsJWT, IsNotEmpty, IsString } from 'class-validator';
 
 export class RegisterDto {
   @IsString()
@@ -28,8 +28,17 @@ export class LoginDto {
   password: string;
 }
 
-export class verifyEmailDto {
+export class VerifyEmailDto {
   @IsString()
   @IsNotEmpty()
   code: string;
 }
+
+export class LogoutDto {
+  @IsString()
+  @IsNotEmpty()
+  @IsJWT()
+  token: string;
+}
+
+export class RefreshDto extends LogoutDto {}

@@ -7,7 +7,10 @@ import { JwtSrategy } from './strategy';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { Code, CodeSchema } from './schema';
+import { Code, CodeSchema, Token, TokenSchema } from './schema';
+import { UserController } from './user.controller';
+import { UserService } from './user.service';
+import * as moment from 'moment';
 
 @Module({
   imports: [
@@ -24,6 +27,7 @@ import { Code, CodeSchema } from './schema';
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
       { name: Code.name, schema: CodeSchema },
+      { name: Token.name, schema: TokenSchema },
     ]),
     MailerModule.forRootAsync({
       useFactory: () => ({
@@ -34,7 +38,12 @@ import { Code, CodeSchema } from './schema';
       }),
     }),
   ],
-  controllers: [AuthController],
-  providers: [AuthService, JwtSrategy],
+  controllers: [AuthController, UserController],
+  providers: [
+    AuthService,
+    UserService,
+    JwtSrategy,
+    { provide: 'MomentWrapper', useValue: moment },
+  ],
 })
 export class AuthModule {}
