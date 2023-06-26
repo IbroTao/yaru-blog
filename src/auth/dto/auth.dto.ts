@@ -17,3 +17,19 @@ export class RegisterDto {
   @IsNotEmpty()
   password: string;
 }
+
+export class LoginDto {
+  @IsString()
+  @IsNotEmpty()
+  emailOrUsername: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password: string;
+}
+
+export class verifyEmailDto {
+  @IsString()
+  @IsNotEmpty()
+  code: string;
+}
